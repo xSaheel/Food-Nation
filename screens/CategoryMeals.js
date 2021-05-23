@@ -1,9 +1,12 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { useSelector } from 'react-redux';
 import Colors from '../assets/Colors';
-import { MEALS, CATEGORIES } from '../Data';
+import { CATEGORIES } from '../Data';
 
 const CategoryMeals = props => {
+
+  const allMeals = useSelector(state => state.meals.meals);
 
   const categoryId = props.navigation.getParam('categoryId');
 
@@ -15,7 +18,8 @@ const CategoryMeals = props => {
           props.navigation.navigate({
             routeName: 'MealDetails',
             params: {
-              mealId: itemData.item.id
+              mealId: itemData.item.id,
+              mealTitle: itemData.item.title
             }
           });
         }}
@@ -31,7 +35,7 @@ const CategoryMeals = props => {
     )
   }
 
-  const meals = MEALS.filter(item => item.catId === categoryId);
+  const meals = allMeals.filter(item => item.catId === categoryId);
 
   return (
     <FlatList 

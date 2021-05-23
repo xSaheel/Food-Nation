@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { StyleSheet, Text, View, ImageBackground, FlatList } from 'react-native';
 import Colors from '../assets/Colors';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -6,15 +7,7 @@ import HeaderButton from '../components/HeaderButton';
 
 const Favorites = props => {
 
-  const [favoriteMeals, setFavoriteMeals] = useState([{
-    id: 109,
-    catId: 3,
-    title: 'Chicken lettuce Salad',
-    desc: 'Delicious tasty tender Chicken Salad',
-    img: 'https://images.pexels.com/photos/991967/pexels-photo-991967.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260',
-    price: 200,
-    isVeg: false
-  }]);
+  const favMeals = useSelector(state => state.meals.favoriteMeals);
 
   const renderFav = itemData => {
     return (
@@ -31,7 +24,7 @@ const Favorites = props => {
 
   return (
     <FlatList 
-      data={favoriteMeals} 
+      data={favMeals} 
       renderItem={renderFav}
     />
   );

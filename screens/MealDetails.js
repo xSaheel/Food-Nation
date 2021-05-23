@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { StyleSheet, Text, View, ImageBackground } from 'react-native';
 import Colors from '../assets/Colors';
-import { MEALS } from '../Data';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleFavorite } from '../store/actions/mealsActions';
 
 const MealDetails = props => {
 
+  const allMeals = useSelector(state => state.meals.meals);
+
   const mealId = props.navigation.getParam('mealId');
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+  const selectedMeal = allMeals.find(meal => meal.id === mealId);
+
+  const dispatch = useDispatch();
+
+  const toggleFavHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
+  }, [dispatch, mealId]);
+
+  useEffect(() => {
+    props.navigation.setParams({toggleFav: toggleFavHandler});
+  },[toggleFavHandler]);
 
   return (
     <View style={styles.container}>
@@ -24,13 +37,14 @@ const MealDetails = props => {
 }
 
 MealDetails.navigationOptions = meals => {
-  const mealId = meals.navigation.getParam('mealId');
-  const selectedMeal = MEALS.find(meal => meal.id === mealId);
+
+  const mealTitle = meals.navigation.getParam('mealTitle');
+  const toggleFav = meals.navigation.getParam('toggleFav');
 
   return {
-    headerTitle: selectedMeal.title,
+    headerTitle: mealTitle,
     headerRight: <HeaderButtons HeaderButtonComponent={HeaderButton}>
-      <Item title="fav" iconName='ios-star' onPress={() => console.log('marked')} />
+      <Item title="fav" iconName='ios-star' onPress={toggleFav} />
     </HeaderButtons>, 
     headerStyle: {
       backgroundColor: Colors.primary
